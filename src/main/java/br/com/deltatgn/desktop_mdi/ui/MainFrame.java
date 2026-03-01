@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 import br.com.deltatgn.desktop_mdi.ui.frames.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainFrame extends JFrame {
 
@@ -13,7 +15,14 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setTitle("Sistema ERP");
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                confirmarSaida();
+            }
+        });
 
         setMinimumSize(new Dimension(1024, 768));
         setSize(1200, 800);
@@ -54,8 +63,9 @@ public class MainFrame extends JFrame {
         // Sair
         JMenu sair = new JMenu("Sair");
         sair.add(new JMenuItem(new AbstractAction("Fechar") {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
-                System.exit(0);
+                confirmarSaida();
             }
         }));
 
@@ -74,6 +84,20 @@ public class MainFrame extends JFrame {
                 manager.openFrame(clazz);
             }
         });
+    }
+
+    private void confirmarSaida() {
+        int opcao = JOptionPane.showConfirmDialog(
+                this,
+                "Deseja realmente sair do sistema?",
+                "Confirmação",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (opcao == JOptionPane.YES_OPTION) {
+            dispose();
+            System.exit(0);
+        }
     }
 
 }
